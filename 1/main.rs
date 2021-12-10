@@ -7,26 +7,16 @@ fn input_ints() -> Vec<i32> {
 }
 
 // Sum inputs in windows of 3.
-fn boxcar_sum(signal : Vec<i32>) -> Vec<i32> {
-    let mut result = Vec::new();
-    for n in 0..(signal.len() - 2) {
-        result.push(signal[n] + signal[n+1] + signal[n+2])
-    }
-    result
+fn boxcar_sum(signal : Vec<i32>, window : usize) -> Vec<i32> {
+    signal.windows(window).map(|slice| slice.iter().sum()).collect()
 }
 
 // Count how many subsequent inputs are increasing.
 fn count_increasing_depths() -> i32 {
-	let depths = boxcar_sum(input_ints());
-	let mut prev = depths[0];
-	let mut increases_count = 0;
-	for depth in depths.iter() {
-		if *depth > prev {
-			increases_count += 1;
-		}
-		prev = *depth;
-	}
-	increases_count
+	boxcar_sum(input_ints(), 3,
+    ).windows(2).map( // Inspect every pair of elements.
+        |window| (window[1] > window[0]) as i32
+    ).sum()
 }
 
 fn main() {
